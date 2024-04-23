@@ -49,14 +49,14 @@ export default {
 
           }
           item.verdict_imprisonment_term = item.verdict_imprisonment_term / 12;
-          item.persecution_started = new Date(item.persecution_started);
+          item.first_verdict_date = new Date(item.first_verdict_date);
 
         });
         // Define the year to filter
         const persecutionStartedYearToFilter = 2010; // Change to the desired year
 
         // Filter data based on persecution_started_year
-        const filteredDataByYear = filteredData.filter(item => item.persecution_started.getFullYear() >= persecutionStartedYearToFilter);
+        const filteredDataByYear = filteredData.filter(item => item.first_verdict_date.getFullYear() >= persecutionStartedYearToFilter);
 
         // console.log(filteredData);
         return filteredDataByYear;
@@ -67,12 +67,13 @@ export default {
     updateChart(filteredData) {
 
       const maxYValue = d3.max(filteredData, d => d.verdict_imprisonment_term);
-      const startDate = new Date(2009, 0, 1); // January 1, 2002
-      const endDate = new Date(2024, 11, 31); // December 31, 2024
+      const startDate = new Date(2009, 7, 1); // January 1, 2002
+      const endDate = new Date(2024, 6, 31); // December 31, 2024
       const chart = Plot.plot({
-        width: 1000,
+        width: 1400,
         height: 928,
-
+        margin: 50,
+        marginRight: 150,
         y: {
           type: "linear",
           domain: [0, maxYValue],
@@ -90,13 +91,33 @@ export default {
         grid: true,
 
         marks: [
+          Plot.barX(filteredData, {
+            x: new Date("2014-02-27"),
+            fill: "#ACC2FF",
+            interval: "day", 
+            inset: 0 
+          }),
+          Plot.tip(
+            [`On 27 February 2014, Russian special forces without insignia seized strategic sites across Crimea.`],
+            { x: new Date("2014-02-27"), y: 27, dy: -8, fontSize: 14, anchor: "middle", stroke: "none" }
+          ),
+          Plot.barX(filteredData, {
+            x: new Date("2022-02-24"),
+            fill: "#3165F3",
+            interval: "day", 
+            inset: 0 
+          }),
+          Plot.tip(
+            [`On 24 February 2022, Putin announced a "special military operation", and started a full scale invasion of Ukraine.`],
+            { x: new Date("2022-02-24"), y: maxYValue, dy: -8, fontSize: 14, anchor: "middle", stroke: "none"  }
+          ),
           Plot.hexagon(
             filteredData,
             Plot.hexbin(
               { fill: "count" },
               {
-                binWidth: 12,
-                x: "persecution_started",
+                binWidth: 14,
+                x: "first_verdict_date",
                 y: "verdict_imprisonment_term",
                 fill: "#ccc",
                 stroke: "#000",
@@ -106,19 +127,20 @@ export default {
                     name: true,
                     stroke: false,
                   },
+                  fontSize: 14
 
                 },
                 title: (d) => {
-                  return `Date: ${d3.timeFormat("%d %b %Y")(d.persecution_started)}\nName: ${d.name_en}\nTerm: ${d.verdict_imprisonment_term.toFixed(2)} years`;
+                  return `Date: ${d3.timeFormat("%d %b %Y")(d.first_verdict_date)}\nName: ${d.name_en}\nTerm: ${d.verdict_imprisonment_term.toFixed(2)} years`;
                 },
 
               }
             )
           ),
-          Plot.crosshair(filteredData, { x: "persecution_started", y: "verdict_imprisonment_term" }),
+          Plot.crosshair(filteredData, { x: "first_verdict_date", y: "verdict_imprisonment_term" }),
           Plot.tip(
-            [`Alexei Navalny was sentenced to 19 years in prison in 2021, but was killed on 16th of February, 2024, aged 47, in FKU IK-3, Kharp.`],
-            { x: new Date("2021-01-01"), y: 19, dy: -4, dx: 4, anchor: "bottom" }
+            [`Alexei Navalny was arrested \nin 2021 and sentenced to 19\nyears in prison in 2023.\nHe was killed on 16th of\nFebruary, 2024, aged 47,\nin FKU IK-3, Kharp.`],
+            { x: new Date("2023-09-04"), y: 19, dy: -4, dx: 8, fontSize: 14, anchor: "left", stroke: "black"  }
           ),
         ]
       })

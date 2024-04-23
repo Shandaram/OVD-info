@@ -2,46 +2,65 @@
     <div class="content-cont" v-if="responseData">
         <div class="chart-cont">
             <!-- Slider to determine distance range filter -->
-            <div class="slider-container">
+            <div class="slider-container first">
                 <div class="sliderange">
-                    <input type="range" class="sliderMap" v-model="smallValue" :max="maxValue"
-                        @input="updateValue('small', $event)" />
-                    <input type="range" class="sliderMap" v-model="bigValue" :max="maxValue"
-                        @input="updateValue('big', $event)" />
-                    <div class="ticks-container">
+                    <input type="range" class="sliderMap" v-model="smallValue" :max="maxValue" step="100"
+                        @input="updateValue('small', $event, smallValue, bigValue)" />
+                    <input type="range" class="sliderMap" v-model="bigValue" :max="maxValue" step="100"
+                        @input="updateValue('big', $event, smallValue, bigValue)" />
+
+                    <div id="ticks-container-range">
                         <!-- Space for generated ticks -->
                     </div>
                 </div>
+
+            </div>
+
+            <!-- Slider to determine timeframe filter -->
+            <div class="slider-container">
+                <div class="sliderange">
+                    <input type="range" class="sliderMap" v-model="startYear" :min="minYear" :max="maxYear"
+                        @input="updateValue('small', $event, startYear, endYear)" />
+                    <input type="range" class="sliderMap" v-model="endYear" :min="minYear" :max="maxYear"
+                        @input="updateValue('big', $event, startYear, endYear)" />
+                    <div id="ticks-container-time">
+                        <!-- Space for generated ticks -->
+                    </div>
+                </div>
+
+            </div>
+            <div class="controls-cont">
                 <div class="text-cont">
                     <p><span>Distance: </span>&nbsp;{{ smallValue }} km - {{ bigValue }} km</p>
+                    <p><span>Year: </span>&nbsp;{{ startYear }} - {{ endYear }}</p>
                     <p><span>People: </span>&nbsp;{{ this.longDistancePrisons.length }}
                         ({{ (this.longDistancePrisons.length * 100 / this.lengthArray).toFixed(0) }} %)</p>
                 </div>
-            </div>
-            <!-- Dropdown with cities -->
-            <div class="dropdown-container">
-                <label for="cityInput">City of origin:</label>
-                <input type="text" id="cityInput" v-model="cityOptions" placeholder="Enter city name">
-                <select id="cityOptions" v-model="cityOptions">
-                    <option disabled selected value="">Choose city name</option>
-                    <option value="all">Show all</option>
-                    <!-- Populate select options dynamically -->
-                </select>
-                <button @click="clearInput('cityOptions')">Clear</button>
-                <!-- Checkbox to filter out only those currently incarcerated -->
-                <div class="checkbox-container">
-                    <label for="inPrisonCheck">Currently incarcerated</label>
-                    <input type="checkbox" id="inPrisonCheck" v-model="inPrisonCheck">
+                <!-- Dropdown with cities -->
+                <div class="dropdown-container">
+                    <label for="cityInput">City of origin:</label>
+                    <input type="text" id="cityInput" v-model="cityOptions" placeholder="Enter city name">
+                    <select id="cityOptions" v-model="cityOptions">
+                        <option disabled selected value="">Choose city name</option>
+                        <option value="all">Show all</option>
+                        <!-- Populate select options dynamically -->
+                    </select>
+                    <button @click="clearInput('cityOptions')">Clear</button>
+                    <!-- Checkbox to filter out only those currently incarcerated -->
+                    <div class="checkbox-container">
+                        <label for="inPrisonCheck">Currently incarcerated:</label>
+                        <input type="checkbox" id="inPrisonCheck" v-model="inPrisonCheck">
+                    </div>
                 </div>
-            </div>
-            <!-- Dropdown with prisons -->
-            <div class="dropdown-container lower">
-                <label for="prisonOptions">Prison:</label>
-                <select id="prisonOptions" v-model="prisonOptions">
-                    <option disabled selected value="">Choose prison name</option>
-                    <option value="allPrisons">Show all</option>
-                </select>
-                <button @click="clearInput('prisonOptions')">Clear</button>
+                <!-- Dropdown with prisons -->
+                <div class="dropdown-container lower">
+                    <label for="prisonOptions">Prison:</label>
+                    <select id="prisonOptions" v-model="prisonOptions">
+                        <option disabled selected value="">Choose prison name</option>
+                        <option value="allPrisons">Show all</option>
+                    </select>
+                    <button @click="clearInput('prisonOptions')">Clear</button>
+                </div>
             </div>
             <!-- The map -->
             <div ref="chartMap" class="chart"></div>
@@ -89,8 +108,12 @@ export default {
         return {
             chart: null,
             smallValue: 0,
-            bigValue: 7050,
-            maxValue: 7050,
+            bigValue: 7000,
+            maxValue: 7000,
+            endYear: 2024,
+            maxYear: 2024,
+            startYear: 2002,
+            minYear: 2002,
             longDistancePrisons: [],
             prisonsWithCoordinates: [],
             lengthArray: 0,
@@ -105,36 +128,35 @@ export default {
     methods: {
         ...mapActions(["fetchDataFromAPI"]),
         // Controling the values of min and max
-        updateValue(slider, event) {
+        updateValue(slider, event, smallVal, bigVal) {
             const newValue = parseInt(event.target.value, 10);
             if (slider === "small") {
-                this.smallValue = newValue;
-                if (this.smallValue > this.bigValue) {
-                    this.bigValue = this.smallValue;
+                this[smallVal] = newValue;
+                if (this[smallVal] > this[bigVal]) {
+                    this[bigVal] = this[smallVal];
                 }
             } else if (slider === "big") {
-                this.bigValue = newValue;
-                if (this.bigValue < this.smallValue) {
-                    this.smallValue = this.bigValue;
+                this[bigVal] = newValue;
+                if (this[bigVal] < this[smallVal]) {
+                    this[smallVal] = this[bigVal];
                 }
             }
         },
         // Generate tick on the distance range input
         generateTicks() {
-            const container = document.querySelector('.ticks-container');
-            const totalDistance = 7000;
-            const tickInterval = 500;
+            const containerRange = document.querySelector('#ticks-container-range');
+            const containerTime = document.querySelector('#ticks-container-time');
 
-            for (let i = 500; i <= totalDistance; i += tickInterval) {
+            for (let i = 500; i <= 7000; i += 500) {
                 const tick = document.createElement('div');
                 tick.classList.add('tick');
                 tick.style.position = 'absolute';
-                tick.style.left = `${(i / totalDistance) * 100}%`;
+                tick.style.left = `${(i / 7000) * 100}%`;
                 tick.style.width = '1px';
                 tick.style.background = 'grey';
                 tick.style.height = '100%';
                 tick.style.backgroundColor = '#000';
-                container.appendChild(tick);
+                containerRange.appendChild(tick);
 
                 const text = document.createElement('div');
                 text.classList.add('tick-text');
@@ -145,9 +167,31 @@ export default {
                 text.style.left = '50%';
                 text.style.transform = 'translateX(-50%)';
                 tick.appendChild(text);
-                container.appendChild(tick);
+            }
+
+            for (let i = 1; i <= 22; i++) {
+                const tick = document.createElement('div');
+                tick.classList.add('tick');
+                tick.style.position = 'absolute';
+                tick.style.left = `${(i / 22) * 100}%`;
+                tick.style.width = '1px';
+                tick.style.background = 'grey';
+                tick.style.height = '100%';
+                tick.style.backgroundColor = '#000';
+                containerTime.appendChild(tick);
+
+                const text = document.createElement('div');
+                text.classList.add('tick-text');
+                text.textContent = 2002 + i;
+                text.style.fontSize = '10px';
+                text.style.position = 'absolute';
+                text.style.bottom = '-15px';
+                text.style.left = '50%';
+                text.style.transform = 'translateX(-50%)';
+                tick.appendChild(text);
             }
         },
+
         // Clear input 
         clearInput(options) {
             this[options] = '';
@@ -161,7 +205,7 @@ export default {
             }
         },
         // Format the data and update it based on user input
-        async renderData(smallvalue, bigValue, cityOptions, inPrisonCheck, prisonOptions) {
+        async renderData(smallvalue, bigValue, cityOptions, inPrisonCheck, prisonOptions, startYear, endYear) {
             try {
                 const responseData = this.responseData
                 // Count all people after first filter 
@@ -207,18 +251,22 @@ export default {
                     selectElementP.add(option);
                 });
                 const prisonsWithCoordinates = [];
+
                 for (let i = 0; i < responseData.data.length; i++) {
                     if (
                         responseData.data[i].penal_facility_en &&
                         responseData.data[i].penal_facility_en.length > 0 &&
                         responseData.data[i].persecution_city_en &&
                         responseData.data[i].persecution_city_en.length > 0 &&
+                        responseData.data[i].persecution_started_year >= startYear &&
+                        responseData.data[i].persecution_started_year <= endYear &&
                         (cityOptions === "" || cityOptions === "all" || responseData.data[i].persecution_city_en[0].toLowerCase() === cityOptions.toLowerCase()) &&
                         (inPrisonCheck === false || responseData.data[i].persecution_imprisoned === true) &&
                         (prisonOptions === "" || prisonOptions === "allPrisons" || responseData.data[i].penal_facility_en[0].includes(prisonOptions))
                     ) {
                         const cityName = responseData.data[i].persecution_city_en[0];
                         const facilityName = responseData.data[i].penal_facility_en[0];
+                      
 
                         let latitude, longitude, facLatitude, facLongitude;
 
@@ -237,13 +285,15 @@ export default {
                             }
                         }
 
-                        const distance = getDistanceFromLatLonInKm(
+                        let distance = getDistanceFromLatLonInKm(
                             latitude,
                             longitude,
                             facLatitude,
                             facLongitude
                         );
-
+                        if (distance > 7000){
+                            distance = 7000
+                        }
                         prisonsWithCoordinates.push({
                             id: responseData.data[i].person_id,
                             name: responseData.data[i].name_en,
@@ -266,6 +316,9 @@ export default {
                 const longDistancePrisons = prisonsWithCoordinates.filter((d) => {
                     return d.distance >= smallvalue && d.distance <= bigValue;
                 });
+
+
+
                 this.longDistancePrisons = longDistancePrisons
                 return longDistancePrisons;
             } catch (error) {
@@ -275,7 +328,7 @@ export default {
         // Update and create the chat 
         updateChart(longDistancePrisons) {
             const width = 1200;
-            const height = 600;
+            const height = 800;
 
             const chart = Plot.plot({
                 width: width,
@@ -349,24 +402,26 @@ export default {
                                 stroke: false,
                             },
                             dy: -100,
+                            fontSize: 14
                         },
                         title: (d) => {
                             let titleText = "";
                             if (d.inPrison) {
-                                if (d.startYear !== undefined && d.sentence !== undefined) {
-                                    titleText = `${d.name} from ${d.city} was arrested in ${d.startYear} and is now serving ${d.sentence.toFixed(0)} years in ${d.facility} ${d.distance.toFixed(0)} km away from home.`;
-                                } else if (d.sentence !== undefined) {
-                                    titleText = `${d.name} from ${d.city} is now in ${d.facility} ${d.distance.toFixed(0)} km away from home.`;
+                                if (d.startYear !== undefined && d.sentence !== undefined && !isNaN(d.sentence)) {
+
+                                    titleText = `${d.name} from ${d.city} began to be persecuted in ${d.startYear} and is now serving ${d.sentence.toFixed(0)} years in ${d.facility} ${d.distance.toFixed(0)} km away from home.`;
+                                } else if (d.sentence !== undefined && !isNaN(d.sentence)) {
+                                    titleText = `${d.name} from ${d.city} is now serving ${d.sentence.toFixed(0)} years in ${d.facility} ${d.distance.toFixed(0)} km away from home.`;
 
                                 } else if (d.startYear !== undefined) {
-                                    titleText = `${d.name} from ${d.city} was arrested in ${d.startYear} and is now serving ${d.sentence.toFixed(0)} years in ${d.facility} ${d.distance.toFixed(0)} km away from home.`;
+                                    titleText = `${d.name} from ${d.city} was arrested in ${d.startYear} and is now in ${d.facility} ${d.distance.toFixed(0)} km away from home.`;
 
                                 } else {
                                     titleText = `${d.name} from ${d.city} is now in ${d.facility} ${d.distance.toFixed(0)} km away from home.`;
                                 }
                             } else {
                                 if (d.startYear !== undefined) {
-                                    titleText = `${d.name} from ${d.city} was arrested in ${d.startYear}, and served ${d.term} years in ${d.facility} ${d.distance.toFixed(0)} km away from home.`;
+                                    titleText = `${d.name} from ${d.city} was arrested in ${d.startYear}, and served ${d.sentence} years in ${d.facility} ${d.distance.toFixed(0)} km away from home.`;
                                 } else {
                                     titleText = `${d.name} from ${d.city} was sent to ${d.facility} ${d.distance.toFixed(0)} km away from home.`;
                                 }
@@ -389,8 +444,8 @@ export default {
 
             return chart;
         },
-        updateDist(smallValue, bigValue, cityOptions, inPrisonCheck, prisonOptions) {
-            this.renderData(smallValue, bigValue, cityOptions, inPrisonCheck, prisonOptions)
+        updateDist(smallValue, bigValue, cityOptions, inPrisonCheck, prisonOptions, startYear, endYear) {
+            this.renderData(smallValue, bigValue, cityOptions, inPrisonCheck, prisonOptions, startYear, endYear)
                 .then((longDistancePrisons) => {
                     const chart = this.updateChart(longDistancePrisons);
                     this.longDistancePrisons = longDistancePrisons
@@ -406,7 +461,7 @@ export default {
     mounted() {
         this.getData()
             .then(() => {
-                return this.renderData(this.smallValue, this.bigValue, this.cityOptions, this.inPrisonCheck, this.prisonOptions);
+                return this.renderData(this.smallValue, this.bigValue, this.cityOptions, this.inPrisonCheck, this.prisonOptions, this.startYear, this.endYear);
             })
             .then((longDistancePrisons) => {
                 this.generateTicks();
@@ -420,40 +475,56 @@ export default {
     },
     watch: {
         smallValue: debounce(function (newValue) {
-            this.updateDist(newValue, this.bigValue, this.cityOptions, this.inPrisonCheck, this.prisonOptions);
+            this.updateDist(newValue, this.bigValue, this.cityOptions, this.inPrisonCheck, this.prisonOptions, this.startYear, this.endYear);
         }, 1),
         bigValue: debounce(function (newValue) {
-            this.updateDist(this.smallValue, newValue, this.cityOptions, this.inPrisonCheck, this.prisonOptions);
+            this.updateDist(this.smallValue, newValue, this.cityOptions, this.inPrisonCheck, this.prisonOptions, this.startYear, this.endYear);
         }, 10),
         cityOptions: debounce(function (newValue) {
-            this.updateDist(this.smallValue, this.bigValue, newValue, this.inPrisonCheck, this.prisonOptions);
+            this.updateDist(this.smallValue, this.bigValue, newValue, this.inPrisonCheck, this.prisonOptions, this.startYear, this.endYear);
         }, 10),
         inPrisonCheck: debounce(function (newValue) {
-            this.updateDist(this.smallValue, this.bigValue, this.cityOptions, newValue, this.prisonOptions);
+            this.updateDist(this.smallValue, this.bigValue, this.cityOptions, newValue, this.prisonOptions, this.startYear, this.endYear);
         }, 10),
         prisonOptions: debounce(function (newValue) {
-            this.updateDist(this.smallValue, this.bigValue, this.cityOptions, this.inPrisonCheck, newValue);
+            this.updateDist(this.smallValue, this.bigValue, this.cityOptions, this.inPrisonCheck, newValue, this.startYear, this.endYear);
+        }, 10),
+        startYear: debounce(function (newValue) {
+            this.updateDist(this.smallValue, this.bigValue, this.cityOptions, this.inPrisonCheck, this.prisonOptions, newValue, this.endYear);
+        }, 1),
+        endYear: debounce(function (newValue) {
+            this.updateDist(this.smallValue, this.bigValue, this.cityOptions, this.inPrisonCheck, this.prisonOptions, this.startYear, newValue);
         }, 10),
     },
 };
 </script>
 
 <style scoped>
+.controls-cont {
+    display: grid;
+    margin-top:5vh;
+    width: 100%;
+    align-items: center;
+    justify-items: center;
+    border: 1px var(--dark-blue) solid;
+    grid-template-rows: 1fr 1fr 1fr;
+}
 /* select */
+
 .dropdown-container {
     background-color: var(--dark-blue);
     display: grid;
     text-align: left;
     grid-template-columns: 0.5fr 1fr 1fr 0.5fr 1fr;
     width: 100%;
-    border: 1px var(--dark-blue) solid;
-    border-bottom: 2px var(--dark-blue) solid;
-    gap: 1px;
+    height: 100%;
+    border-bottom: 1px var(--dark-blue) solid;
+    column-gap: 1px;
     align-items: center;
 }
 
 .dropdown-container * {
-    height: calc(100% - 14px);
+    height: 100%;
     background-color: var(--background);
     padding: 8px 5px;
     display: flex;
@@ -480,26 +551,30 @@ export default {
 }
 
 input[type=text] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
     background-color: var(--light-grey);
     border: none;
     font-size: 16px;
+    border-radius: 0;
+
 }
 
 .text-cont {
     position: relative;
-    background-color: black;
+    background-color: var(--dark-blue);
     width: 100%;
     display: grid;
     text-align: left;
-    grid-template-columns: 2fr 1fr;
-    border: 1px black solid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-bottom: 1px var(--dark-blue) solid;
     gap: 1px;
     align-items: center;
-    left: -1px;
 }
 
 .text-cont p {
-    height: calc(100% - 10px);
+    height: 100%;
     background-color: var(--background);
     padding: 5px;
     display: flex;
@@ -521,7 +596,7 @@ label {
 
 .dropdown-container.lower {
     grid-template-columns: 0.5fr 3fr 0.5fr;
-    border-top: 1px transparent solid;
+    border: none;
 }
 
 #chart {
@@ -532,24 +607,18 @@ label {
     color: rgb(202, 202, 202);
 }
 
-.ticks-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 20px;
-}
 
 #cityOptions,
 #prisonOptions {
     width: 100%;
-    height: 103%;
+    height: 100%;
     font-size: 16px;
     cursor: pointer;
     margin: 0;
     border: none;
     outline: none;
     background-color: white;
+    border-radius: 0;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -565,14 +634,19 @@ label {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: calc(100% - 14px);
-    width: calc(100% - 1px);
+    height: 100%;
+    width: 100%;
+
 }
 
 .checkbox-container input[type="checkbox"] {
-    height: calc(100% + 18px);
-    width: 60px;
     -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    height: calc(100% );
+    width: 50px;
+    padding-right: 0;
+    border-radius: 0;
     appearance: none;
     border: 1px solid var(--color);
     background-color: white;
@@ -609,12 +683,37 @@ label {
 
 
 /* slider */
+
+
+#ticks-container-range {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+}
+
+#ticks-container-time {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    height: 20px;
+}
+
 .slider-container {
     display: flex;
     flex-direction: column;
     gap: 5vh;
     width: 100%;
+    position: relative;
+
 }
+
+.slider-container.first {
+    margin-bottom: 5vh;
+}
+
 
 .sliderange {
     position: relative;
@@ -647,5 +746,40 @@ input[type="range"] {
     position: absolute;
     background-color: #959595;
     pointer-events: none;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .content-cont {
+        margin-top: 10vh;
+    }
+
+    .text-cont {
+        grid-template-columns: 1fr;
+    }
+
+    .dropdown-container {
+        grid-template-columns: 1fr;
+    }
+
+    .dropdown-container.lower {
+        grid-template-columns: 1fr;
+    }
+
+    .dropdown-container button {
+        padding: 2vh 0;
+        font: inherit;
+        cursor: pointer;
+        background-color: var(--dark-blue);
+        color: var(--background);
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        justify-content: center;
+        align-self: center;
+        text-align: center;
+    }
+
 }
 </style>

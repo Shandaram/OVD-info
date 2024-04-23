@@ -101,7 +101,7 @@ export default {
 
 
                 const terrorismGroup = { name: "terrorism", children: [] };
-                const infoGroup = { name: "information", children: [] };
+                const infoGroup = { name: "speech", children: [] };
                 const protestGroup = { name: "protest", children: [] };
                 const govGroup = { name: "military", children: [] };
                 const otherGroup = { name: "other", children: [] };
@@ -213,7 +213,7 @@ export default {
                 const customColors = ["#871124", "#de755f", "#f5b599", "#3984bb", "#888888"];
 
                 const color = d3.scaleOrdinal()
-                    .domain(["terrorism", "information", "protest", "military", "other"])
+                    .domain(["terrorism", "speech", "protest", "military", "other"])
                     .range(customColors);
 
 
@@ -225,7 +225,7 @@ export default {
                 const legend = svg => {
                     const customText = {
                         "terrorism": "Terrorism: articles related to interaction with forbidden organisations",
-                        "information": "Information: articles related to misinformation, discrediting Russian Army, and insult of religiois feelings",
+                        "speech": "Speech: articles related to misinformation, discrediting Russian Army, and insult of religiois feelings",
                         "military": "Military: articles related to trafficing arms, violent uprisings, treason and disobeying orders",
                         "protest": "Protest: articles associate with protesting",
                         "other": "Other"
@@ -314,6 +314,7 @@ export default {
                         .style("top", "160vh")
                         .style("width", "32vw")
                         .style("left", "34vw")
+                        .style("font-size", "14px")
                         .style("text-align", "left")
                         .style("border-width", "1px")
                         .style("padding", "10px")

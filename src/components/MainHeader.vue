@@ -1,14 +1,14 @@
 <template>
     <header>
-        <router-link class="logo-link" to="/">
+        <router-link class="logo-link" to="/ovd">
             <img src="../assets/logo.png" class="box-animation left" alt="">
             <img src="../assets/logo.png" class="logo" alt="">
             <img src="../assets/logo.png" class="box-animation right" alt="">
        </router-link>
         <div class="block-r">
-        <router-link to="/sentences" :class="{ active: $route.path === '/sentences' }">Protest</router-link>
+        <router-link to="/sentences" :class="{ active: $route.path === '/sentences' }">Sentences</router-link>
         <router-link to="/prisoner-flow" :class="{ active: $route.path === '/prisoner-flow' }">Map</router-link>
-        <router-link to="/articles" :class="{ active: $route.path === '/articles' }">Article</router-link>
+        <router-link to="/articles" :class="{ active: $route.path === '/articles' }">Articles</router-link>
         </div>
     </header>
 </template>
@@ -23,7 +23,7 @@ export default {
 
 <style scoped>
 header {
-    width: 84vw;
+ 
     display: grid;
     grid-template-columns: auto 3fr;
     grid-template-rows: auto;
@@ -91,6 +91,13 @@ header a:hover, header a.active {
 }
 .logo-link:hover .box-animation.right {
    right: -3px;
+}
+
+@media only screen and (max-width: 600px) {
+    header {
+    padding: 2vw 7vw;
+    font-size: 18px;
+}
 }
 
 </style>

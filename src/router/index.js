@@ -6,13 +6,9 @@ import DataTextView from '../views/DataTextView.vue';
 
 const routes = [
   {
-    path: '/',
+    path: '/ovd',
     name: 'Home',
     component: HomeView,
-  },
-  {
-    path: '/ovd',
-    redirect: '/',
   },
   {
     path: '/sentences',
@@ -29,9 +25,7 @@ const routes = [
     path: '/articles',
     name: 'DataText',
     component: DataTextView, 
-  },
-
-  
+  }
 ];
 
 const router = createRouter({

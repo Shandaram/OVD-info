@@ -1,7 +1,7 @@
 <template>
   <MainHeader />
   <div class="main-cont">
-    <router-view />  
+    <router-view />
   </div>
 
 </template>
@@ -10,7 +10,7 @@
 import MainHeader from "./components/MainHeader";
 
 export default {
-  name: 'App', 
+  name: 'App',
   components: {
     MainHeader
   }
@@ -18,6 +18,10 @@ export default {
 </script>
 
 <style>
+
+* {
+  box-sizing: border-box;
+}
 .russo-one-regular {
   font-family: "Russo One", sans-serif;
   font-weight: 400;
@@ -35,13 +39,16 @@ h1 {
   font-size: 70px;
   margin-bottom: 2vw;
 }
+
 .placeholder {
   position: relative;
 }
+
 .placeholder img {
   opacity: 0.5;
 }
-.placeholder p{
+
+.placeholder p {
   font-size: 40px;
   text-transform: uppercase;
   position: absolute;
@@ -59,7 +66,8 @@ body {
   justify-content: center;
   align-items: center;
   margin: 0;
-
+  overflow-x: hidden;
+  width: 100vw;
 }
 
 a {
@@ -67,17 +75,27 @@ a {
   color: var(--color);
 }
 
+.intext-link {
+  font-weight: bold;
+}
+
+.intext-link:hover {
+  color: var(--red);
+}
+
+
 #app {
-  font-family: "Roboto", sans-serif; 
+  font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: var(--color);
   width: 100%;
+  overflow-x: visible;
+  overflow-y: visible;
 }
 
 .main-cont {
-
   width: 80vw;
   margin: 0 auto;
 
@@ -87,5 +105,25 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+}
+
+
+@media only screen and (max-width: 600px) {
+  .main-cont {
+    width: 88vw;
+  }
+
+  h1 {
+    font-size: 48px;
+  }
+
+  figure {
+    margin: 8vh 0;
+  }
+  #app {
+  overflow-x: hidden;
+  overflow-y: visible;
+}
 }
 </style>
