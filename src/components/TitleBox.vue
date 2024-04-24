@@ -5,12 +5,12 @@
       <h1>{{ title }}</h1>
       <div class="stats">
         <div class="stats-line one">
-          <p>Scope: <span>&nbsp; {{ scope }}</span> </p>
-          <p>Filter: <span>&nbsp; {{ filter }}</span> </p>
+          <p>Scope:<span>{{ scope }}</span> </p>
+          <p>Filter:<span>{{ filter }}</span> </p>
         </div>
         <div class="stats-line two">
-          <p>API: <span>&nbsp; {{ api }} </span> </p>
-          <p>Params: <span>&nbsp; {{ apiParams }}</span> </p>
+          <p>API: <span>{{ api }} </span> </p>
+          <p>Params: <span>{{ apiParams }}</span> </p>
         </div>
       </div>
       <p v-html="description"></p>
@@ -113,7 +113,8 @@ img {
 }
 
 .stats span {
-  font-weight: normal
+  font-weight: normal;
+  padding-left: 1vw;
 }
 
 .stats-line {
@@ -159,6 +160,8 @@ img {
   margin-top: 8vh;
   grid-column: 1 / 2;
 }
-
+.stats span {
+  padding-left: 2vw;
+}
 }
 </style>

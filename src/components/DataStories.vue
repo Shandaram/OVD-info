@@ -1,5 +1,5 @@
 <template>
-    <div v-if="this.filteredData">
+    <div class="cont" v-if="this.filteredData">
         <!-- select citizenship -->
         <!-- checkbox health -->
         <!-- checkbox torture -->
@@ -84,81 +84,83 @@
 
         <div class="stories-cont">
             <div class="case" v-for="(item, index) in this.filteredData" :key="index">
-               
-                    <div class="title-cont">
 
-                        <p> {{ index + 1 }}</p>
-                        <h2>{{ item.name_en }}</h2>
-                        <div style="background: var(--grey); height: 2px; width: 100%; border-bottom: 2px var(--background) dashed;"></div>
-                        <div v-if="item.case_name_en" class="tag"> {{ item.case_name_en }}</div>
+                <div class="title-cont">
+
+                    <p> {{ index + 1 }}</p>
+                    <h2>{{ item.name_en }}</h2>
+                    <div
+                        style="background: var(--grey); height: 2px; width: 100%; border-bottom: 2px var(--background) dashed;">
                     </div>
+                    <div v-if="item.case_name_en" class="tag"> {{ item.case_name_en }}</div>
+                </div>
 
-                    <div class="info-box">
-                        <div class="hor-cont-box">
-                            <div class="hor-cont">
-                                <p>Prosecution started:</p>
-                                <p>{{ formatDate(item.persecution_started) }}</p>
-                            </div>
+                <div class="info-box">
+                    <div class="hor-cont-box">
+                        <div class="hor-cont">
+                            <p>Prosecution started:</p>
+                            <p>{{ formatDate(item.persecution_started) }}</p>
                         </div>
-                        <div class="hor-cont-box">
-                            <div class="hor-cont">
-                                <p>Age when prosecution started:</p>
-                                <p>{{ item.age_persecution_began }}</p>
-                            </div>
-                            <div class="hor-cont">
-                                <p>City:</p>
-                                <p>{{ item.persecution_city_en[0] }}<span v-if="item.persecution_region_en">, {{
+                    </div>
+                    <div class="hor-cont-box">
+                        <div class="hor-cont">
+                            <p>Age when prosecution started:</p>
+                            <p>{{ item.age_persecution_began }}</p>
+                        </div>
+                        <div class="hor-cont">
+                            <p>City:</p>
+                            <p>{{ item.persecution_city_en[0] }}<span v-if="item.persecution_region_en">, {{
         item.persecution_region_en[0] }} </span></p>
-                            </div>
-                            <div v-if="item.persecution_occupation_en" class="hor-cont">
-                                <p>Occupation: </p>
-                                <p>{{ item.persecution_occupation_en[0] }}</p>
-                            </div>
                         </div>
-                        <!-- 
+                        <div v-if="item.persecution_occupation_en" class="hor-cont">
+                            <p>Occupation: </p>
+                            <p>{{ item.persecution_occupation_en[0] }}</p>
+                        </div>
+                    </div>
+                    <!-- 
 
 //             // persecution_health_issues
 //             //torture
 //             //citizenship
 
 //             // persecution_article_and_part_en -->
-                        <div class="hor-cont-box">
-                            <div v-if="item.persecution_location_en" class="hor-cont">
-                                <p>Location:</p>
-                                <p>{{ item.persecution_location_en }}</p>
-                            </div>
-                            <div v-if="item.persecution_person_state_en" class="hor-cont">
-                                <p>Status:</p>
-                                <p>{{ item.persecution_person_state_en }}</p>
-                            </div>
+                    <div class="hor-cont-box">
+                        <div v-if="item.persecution_location_en" class="hor-cont">
+                            <p>Location:</p>
+                            <p>{{ item.persecution_location_en }}</p>
                         </div>
-                        <div class="hor-cont-box">
-                            <div v-if="item.persecution_article_and_part_en" class="hor-cont">
-                                <p>Article:</p>
-    <p>{{ item.persecution_article_and_part_en.join(' | ') }}</p>
-                            </div>
-                            <div v-if="item.verdict_imprisonment_term" class="hor-cont">
-                                <p>Term:</p>
-                                <p>{{ (item.verdict_imprisonment_term / 12).toFixed(1)}} years</p>
-                            </div>
-
-                        </div>
-                        <div v-if="item.verdict_essence_en" class="hor-cont-box">
-                            <div class="hor-cont">
-                                <p>Verdict:</p>
-                                <p>{{ item.verdict_essence_en }}</p>
-                            </div>
-                        </div>
-                        <div v-if="item.penal_facility_en && item.penal_facility_en.length > 0" class="hor-cont-box">
-                            <div class="hor-cont">
-                                <p>Facility:</p>
-                                <p>{{ item.penal_facility_en[0] }}</p>
-                            </div>
+                        <div v-if="item.persecution_person_state_en" class="hor-cont">
+                            <p>Status:</p>
+                            <p>{{ item.persecution_person_state_en }}</p>
                         </div>
                     </div>
-                    <h3>Story</h3>
-                    <p>{{ item.story_en }}</p>
-      
+                    <div class="hor-cont-box">
+                        <div v-if="item.persecution_article_and_part_en" class="hor-cont">
+                            <p>Article:</p>
+                            <p>{{ item.persecution_article_and_part_en.join(' | ') }}</p>
+                        </div>
+                        <div v-if="item.verdict_imprisonment_term" class="hor-cont">
+                            <p>Term:</p>
+                            <p>{{ (item.verdict_imprisonment_term / 12).toFixed(1) }} years</p>
+                        </div>
+
+                    </div>
+                    <div v-if="item.verdict_essence_en" class="hor-cont-box">
+                        <div class="hor-cont">
+                            <p>Verdict:</p>
+                            <p>{{ item.verdict_essence_en }}</p>
+                        </div>
+                    </div>
+                    <div v-if="item.penal_facility_en && item.penal_facility_en.length > 0" class="hor-cont-box">
+                        <div class="hor-cont">
+                            <p>Facility:</p>
+                            <p>{{ item.penal_facility_en[0] }}</p>
+                        </div>
+                    </div>
+                </div>
+                <h3>Story</h3>
+                <p>{{ item.story_en }}</p>
+
             </div>
         </div>
 
@@ -380,12 +382,12 @@ export default {
                 }
 
 
-                    // Sort the filtered data by persecution started date
-                    filteredData.sort((a, b) => {
-                        const dateA = new Date(a.persecution_started);
-                        const dateB = new Date(b.persecution_started);
-                        return dateA - dateB;
-                    });
+                // Sort the filtered data by persecution started date
+                filteredData.sort((a, b) => {
+                    const dateA = new Date(a.persecution_started);
+                    const dateB = new Date(b.persecution_started);
+                    return dateA - dateB;
+                });
                 this.filteredData = filteredData;
                 return this.filteredData;
             } catch (error) {
@@ -488,18 +490,23 @@ export default {
 
 
 <style scoped>
+
 .hor-cont-box {
     display: flex;
     border-bottom: 1px solid var(--grey);
 }
-.hor-cont-box  *{
-   padding: 5px;
+
+.hor-cont-box * {
+    padding: 5px;
 }
 
 .hor-cont {
     display: flex;
     width: 100%;
     border-right: 1px solid var(--grey);
+
+    align-items: baseline;
+
 }
 
 .hor-cont> :nth-child(1) {
@@ -513,6 +520,7 @@ export default {
     background-color: white;
 
 }
+
 .case {
     width: 75%;
 }
@@ -524,12 +532,12 @@ export default {
     justify-items: center;
     align-items: center;
     gap: 10vh;
-margin-top: 10vh;
+    margin-top: 10vh;
 }
 
 .title-cont {
     display: grid;
-    grid-template-columns: auto auto 1fr  auto;
+    grid-template-columns: auto auto 1fr auto;
     align-items: center;
     grid-gap: 1vw;
 }
@@ -650,7 +658,7 @@ label {
 
 
 #cityOptions,
-#prisonOptions, 
+#prisonOptions,
 #genderInput {
     width: 100%;
     height: 100%;
@@ -792,21 +800,18 @@ input[type="range"] {
 
 
 @media only screen and (max-width: 900px) {
-    .content-cont {
-        margin-top: 5vh;
+    .cont {
+        width: 90vw;
+        margin-top: 8vh;
     }
 
-    .text-cont {
+    .text-cont,
+    .dropdown-container,
+    .dropdown-container.lower,
+    .dropdown-container.second {
         grid-template-columns: 1fr;
     }
 
-    .dropdown-container {
-        grid-template-columns: 1fr;
-    }
-
-    .dropdown-container.lower {
-        grid-template-columns: 1fr;
-    }
 
     .dropdown-container button {
         padding: 2vh 0;
@@ -825,12 +830,26 @@ input[type="range"] {
 
     .hor-cont-box {
         flex-wrap: wrap;
+        border: none;
     }
 
     .hor-cont {
-
+        font-size: 16px;
         border-bottom: 1px solid var(--grey);
+        text-wrap: pretty;
     }
+
+    .case {
+        width: 90vw;
+    }
+
+    .title-cont {
+
+        grid-template-columns: 1fr;
+        margin-bottom: 2vh;
+
+    }
+
 
 }
 </style>
