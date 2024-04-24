@@ -109,7 +109,7 @@ a {
 }
 
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 900px) {
   .main-cont {
     width: 88vw;
   }

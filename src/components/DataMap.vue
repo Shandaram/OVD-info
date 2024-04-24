@@ -250,6 +250,8 @@ export default {
                     option.value = prisonName;
                     selectElementP.add(option);
                 });
+
+                
                 const prisonsWithCoordinates = [];
 
                 for (let i = 0; i < responseData.data.length; i++) {
@@ -749,9 +751,9 @@ input[type="range"] {
 }
 
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 900px) {
     .content-cont {
-        margin-top: 10vh;
+        margin-top: 5vh;
     }
 
     .text-cont {

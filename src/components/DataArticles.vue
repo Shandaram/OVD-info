@@ -23,13 +23,16 @@ export default {
     },
     methods: {
         ...mapActions(["fetchArticlesFromAPI"]),
+
         async renderData() {
             try {
                 let response = await this.fetchArticlesFromAPI();
                 this.articles = response.data;
                 let articleData = this.articles;
+        
                 articleData.forEach(obj => {
                     this.overallCount = this.overallCount + obj.attributes.article_persons.length
+
                 })
 
                 const articleTree = {
@@ -210,7 +213,7 @@ export default {
                 }
 
                 //color
-                const customColors = ["#871124", "#de755f", "#f5b599", "#3984bb", "#888888"];
+                const customColors = ["#871124", "#f5b599", "#9278B5", "#3984bb", "#888888"];
 
                 const color = d3.scaleOrdinal()
                     .domain(["terrorism", "speech", "protest", "military", "other"])
@@ -234,7 +237,7 @@ export default {
                         .selectAll("g")
                         .data(color.domain())
                         .join("g")
-                        .attr("transform", (d, i) => `translate(${-width / 2 + 100} ,${-width / 2  + i * 20})`);
+                        .attr("transform", (d, i) => `translate(${-width / 2 + 100} ,${-width / 2 + i * 20})`);
 
                     g.append("rect")
                         .attr("width", 18)
@@ -287,9 +290,6 @@ export default {
                 }
 
 
-
-
-
                 const chart = (articleTree) => {
                     const root = d3.hierarchy(articleTree)
                         .sum(d => d.children ? 0 : 1)
@@ -340,24 +340,6 @@ export default {
                     }
 
                     `);
-
-
-                    // Append color pie chart
-                    // var arc = d3.arc()
-                    //     .innerRadius(innerRadius)
-                    //     .outerRadius(outerRadius - 150)
-
-                    // var pie = d3.pie().value(d => d.value)
-
-                    // svg.append("g")
-                    //     .selectAll("path")
-                    //     .data(pie(root.leaves()))
-                    //     .join("g")
-                    //     .append("path")
-                    //     .attr("d", arc)
-                    //     .style("fill", d => d.data.color)
-                    //     .style("opacity", 0.3)
-
 
                     // Append link extension
                     const linkExtension = svg.append("g")
@@ -442,23 +424,22 @@ export default {
                         .domain([0, d3.max(root.leaves(), d => d.data.count)]); // Adjust the domain to fit the maximum count value
 
 
-
-
-                    // Append line chart
+                    // Line charts offsets
                     const offsetAngle = 18 * (2 * Math.PI / root.leaves().length); // Calculate the offset angle
-
-                    // Append line chart
+                  
+                    // Append line chart people
                     svg.append("g")
                         .selectAll("line")
                         .data(root.leaves())
                         .enter()
                         .append("line")
                         .style("stroke", d => d.color) // Set the color of the lines
-                        .style("stroke-width", "3.5px") // Set the width of the lines
+                        .style("stroke-width", "2.5px") // Set the width of the lines
                         .attr("x1", d => y(0) * Math.cos(x(d.data.name) - offsetAngle)) // Calculate the x coordinate of the start point with offset
                         .attr("y1", d => y(0) * Math.sin(x(d.data.name) - offsetAngle)) // Calculate the y coordinate of the start point with offset
                         .attr("x2", d => y(d.data.count) * Math.cos(x(d.data.name) - offsetAngle)) // Calculate the x coordinate of the end point with offset
                         .attr("y2", d => y(d.data.count) * Math.sin(x(d.data.name) - offsetAngle)); // Calculate the y coordinate of the end point with offset
+
 
                     //Append text inner
                     svg.append("g")

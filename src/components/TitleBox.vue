@@ -16,6 +16,9 @@
       <p v-html="description"></p>
       <span style="color: var(--red)"> <i>Please note that the data may contain inaccuracies!</i></span>
     </div>
+
+    <div class="instruction" v-html="instruction"></div>
+
   </div>
 </template>
 <script>
@@ -49,7 +52,11 @@ export default {
     apiParams: {
       type: String,
       default: "en, full",
-    }
+    }, 
+    instruction: {
+      type: String,
+      default: "no instruction yet",
+    }, 
   },
   methods: {
     resolve_img_url: function (path) {
@@ -121,8 +128,14 @@ img {
   grid-template-columns: 2fr 1fr;
 
 }
-
-@media only screen and (max-width: 600px) {
+.instruction {
+  margin-top: 3vh;
+  border: 1px solid var(--dark-blue);
+  width: 100%;
+  padding: 1vw;
+  grid-column: 1 / 3;
+}
+@media only screen and (max-width: 900px) {
   .title-cont {
     grid-template-columns: 1fr;
     justify-items: center;
@@ -141,6 +154,10 @@ img {
   .stats p:nth-child(2) {
   padding-left: 0;
 
+}
+.instruction {
+  margin-top: 8vh;
+  grid-column: 1 / 2;
 }
 
 }

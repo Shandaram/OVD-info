@@ -7,10 +7,16 @@
     <div class="about-text">
       <div>
         <h2>About</h2>
-        <p> This project aims to make the invaluable data from  <a target='_blank' class='intext-link' href="https://observablehq.com/d/3dfc2fcf987505cb">OVDinfo API</a> more accessible and easy to understand for everyone.
-           One of the key features is the Correctional Cartography map, which provides insights into the movement of individuals resulting from incarceration. The Sentences graph tracks the evolution of prison sentences over time, and the radial diagram focuses on the most 
-           common articles leading to political convictions. These visualizations were created using <a target='_blank' href=”https://d3js.org” class='intext-link'  >D3.js</a> and <a target=”_blank” href=”https://observablehq.com/plot/” class='intext-link' > Observable Plot</a>. 
-          3D models are made in Blender. </p>
+        <p> This project aims to make the invaluable data from 
+    <a target='_blank' class='intext-link' href="https://observablehq.com/d/3dfc2fcf987505cb">OVDinfo API</a>
+    more accessible and easy to understand for everyone.
+    One of the key features is the Correctional Cartography map, which provides insights into the movement of individuals resulting from incarceration. The Sentences graph tracks the evolution of prison sentences over time, and the radial diagram focuses on the most 
+    common articles leading to political convictions. These visualizations were created using 
+    <a target='_blank' class='intext-link' href='https://d3js.org' >D3.js</a> and 
+    <a target='_blank' class='intext-link' href='https://observablehq.com/plot/'> Observable Plot</a>. 
+    3D models are made in Blender.
+</p>
+
 
       </div>
       <div>
@@ -52,7 +58,7 @@ export default {
   justify-self: start;
   text-align: left;
   width: 100%;
-  margin-top: 25vh;
+  margin-top: 15vh;
 }
 
 .about-text > :nth-child(2) {
@@ -69,6 +75,7 @@ width:28%;
   display: grid;
   width: 100%;
   justify-content: center;
+  padding-bottom: 10vh;
 }
 
 h1 {
@@ -111,7 +118,7 @@ img {
   z-index: 3;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 900px) {
 
   h1,
   h1.years {

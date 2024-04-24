@@ -9,7 +9,9 @@
         <router-link to="/sentences" :class="{ active: $route.path === '/sentences' }">Sentences</router-link>
         <router-link to="/prisoner-flow" :class="{ active: $route.path === '/prisoner-flow' }">Map</router-link>
         <router-link to="/articles" :class="{ active: $route.path === '/articles' }">Articles</router-link>
-        </div>
+        <router-link to="/stories" :class="{ active: $route.path === '/stories' }">Stories</router-link>
+       
+    </div>
     </header>
 </template>
 
@@ -93,7 +95,7 @@ header a:hover, header a.active {
    right: -3px;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 900px) {
     header {
     padding: 2vw 7vw;
     font-size: 18px;
