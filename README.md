@@ -44,11 +44,11 @@ Find the project at https://kseniiia.nl/ovd/
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Shandaram/prison-app.git
+   git clone https://github.com/Shandaram/OVD-info.git
    ```
 2. Navigate to the project directory:
    ```bash
-   cd prison-app
+   cd OVD-info
    ```
 3. Install dependencies:
    ```bash
@@ -68,7 +68,7 @@ Find the project at https://kseniiia.nl/ovd/
 ## Project Structure
 
 ```
-prison-app/
+OVD-info/
 ├── src/
 │   ├── components/      # Vue components for visualizations
 │   ├── assets/          # Images, 3D models, and other static assets
