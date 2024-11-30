@@ -100,4 +100,4 @@ prison-app/
 
 ---
 
-- Created for Interactive Digital Media MSc at Trinity College Dublin
+Created for Interactive Digital Media MSc at Trinity College Dublin
